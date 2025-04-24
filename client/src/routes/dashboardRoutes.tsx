@@ -1,51 +1,33 @@
-import App from "@/App";
+import AdminDashboard from "@/pages/dashboard/admin/AdminDashboard";
+import ManageOrder from "@/pages/dashboard/admin/ManageOrder";
 import ManageProduct from "@/pages/dashboard/admin/ManageProduct";
 import ManageUser from "@/pages/dashboard/admin/ManageUser";
-import ManageOrders from "@/pages/dashboard/user/ManageOrders";
+import MyOrder from "@/pages/dashboard/user/MyOrder";
 import Profile from "@/pages/dashboard/user/Profile";
 
-export const adminPath = [
+export const DasboardRoutes = [
   {
-    name: "Home",
-    path: "home",
-    element: <App />,
+    index: true,
+    element: <AdminDashboard />,
   },
   {
-    name: "Admin",
-    children: [
-      {
-        name: "Manage Product",
-        path: "manage-product",
-        element: <ManageProduct />,
-      },
-      {
-        name: "Manage Users",
-        path: "manage-users",
-        element: <ManageUser />,
-      },
-    ],
+    path: "manage-product",
+    element: <ManageProduct />,
   },
-];
-export const userPath = [
   {
-    name: "Home",
-    path: "home",
-    element: <App />,
+    path: "manage-user",
+    element: <ManageUser />,
   },
-
   {
-    name: "User",
-    children: [
-      {
-        name: "Manage Orders",
-        path: "manage-orders",
-        element: <ManageOrders />,
-      },
-      {
-        name: "Profile",
-        path: "Profile",
-        element: <Profile />,
-      },
-    ],
+    path: "manage-order",
+    element: <ManageOrder />,
+  },
+  {
+    path: "profile",
+    element: <Profile />,
+  },
+  {
+    path: "orders",
+    element: <MyOrder />,
   },
 ];

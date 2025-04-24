@@ -1,34 +1,48 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import About from "@/pages/About";
-import AllProduct from "@/pages/AllProduct";
-import Contact from "@/pages/Contact";
+import Home from "@/pages/local/Home";
+import Login from "@/pages/common/Login";
+import Register from "@/pages/common/Register";
+import About from "@/pages/local/About";
 import DashboardLayout from "@/layout/Dashboardlayout";
-import { routesGenerate } from "@/utils/routesGenerate";
-import { adminPath } from "./dashboardRoutes";
+import { DasboardRoutes } from "./dashboardRoutes";
+import App from "../App";
+import CheckoutPage from "@/pages/dashboard/user/CheckoutPage";
+import AllBicycle from "@/pages/local/AllBicycle";
+import SingleBicycle from "@/pages/local/SingleBicycle";
+import ErrorPage from "@/pages/common/ErrorPage";
 
 const router = createBrowserRouter([
   {
+    path: "error",
+    element: <ErrorPage />,
+  },
+  {
+    path: "login",
+    element: <Login />,
+  },
+  {
+    path: "register",
+    element: <Register />,
+  },
+  {
+    path: "checkout",
+    element: <CheckoutPage />,
+  },
+  {
     path: "/",
-    element: <Home />,
+    element: <App />,
     children: [
       {
-        path: "login",
-        element: <Login />,
+        index: true,
+        element: <Home />,
       },
       {
-        path: "register",
-        element: <Register />,
+        path: "bicycle",
+        element: <AllBicycle />,
       },
       {
-        path: "all-product",
-        element: <AllProduct />,
-      },
-      {
-        path: "contact",
-        element: <Contact />,
+        path: "/bicycle/:id",
+        element: <SingleBicycle />,
       },
       {
         path: "about",
@@ -39,7 +53,7 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashboardLayout />,
-    children: routesGenerate(adminPath),
+    children: DasboardRoutes,
   },
 ]);
 
