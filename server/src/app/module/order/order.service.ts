@@ -9,7 +9,12 @@ import AppError from '../../errors/appError'
 const createOrder = async (
   user: { _id: string; name: string; email: string },
   payload: {
-    bicycles: { bicycle: string; quantity: number }[]
+    bicycles: {
+      bicycle: string
+      name: string
+      quantity: number
+      brand: string
+    }[]
     deliveryType: 'standard' | 'express'
   },
   client_ip: string
@@ -17,10 +22,10 @@ const createOrder = async (
   const session = await mongoose.startSession()
   session.startTransaction()
 
-  let totalPrice = 0
-  const orderedItems: any[] = []
-
   try {
+    let totalPrice = 0
+    const orderedItems: any[] = []
+
     for (const { bicycle, quantity } of payload.bicycles) {
       const bicycleInfo = await Bicycle.findById(bicycle).session(session)
       if (!bicycleInfo) throw new Error('Product not found')
@@ -39,8 +44,9 @@ const createOrder = async (
 
       orderedItems.push({
         bicycle: bicycleInfo._id,
+        name: bicycleInfo.name,
         quantity,
-        price: bicycleInfo.price,
+        brand: bicycleInfo.brand,
       })
     }
 
@@ -65,7 +71,7 @@ const createOrder = async (
             name: currentUser?.name,
             email: currentUser?.email,
           },
-          items: orderedItems,
+          bicycles: orderedItems,
           totalPrice,
           deliveryType: payload.deliveryType,
           clientIP: client_ip,
