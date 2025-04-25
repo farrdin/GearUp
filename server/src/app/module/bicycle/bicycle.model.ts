@@ -43,7 +43,7 @@ const bicycleSchema = new Schema<IBicycle>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 )
 
 const Bicycle = model<IBicycle>('Bicycle', bicycleSchema)

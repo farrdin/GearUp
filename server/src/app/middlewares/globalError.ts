@@ -7,7 +7,7 @@ export const globalError = (
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const statusCode = err.statusCode || httpStatus.INTERNAL_SERVER_ERROR
   res.status(statusCode).json({

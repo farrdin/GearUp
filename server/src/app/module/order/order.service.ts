@@ -17,7 +17,7 @@ const createOrder = async (
     }[]
     deliveryType: 'standard' | 'express'
   },
-  client_ip: string
+  client_ip: string,
 ) => {
   const session = await mongoose.startSession()
   session.startTransaction()
@@ -35,7 +35,7 @@ const createOrder = async (
       const updatedProduct = await Bicycle.findOneAndUpdate(
         { _id: bicycle, quantity: { $gte: quantity } },
         { $inc: { quantity: -quantity } },
-        { new: true, session }
+        { new: true, session },
       )
 
       if (!updatedProduct) throw new Error('Stock update failed')
@@ -57,7 +57,7 @@ const createOrder = async (
 
     // Find user
     const currentUser = await User.findOne({ email: user.email }).session(
-      session
+      session,
     )
     const buyer = currentUser?._id?.toString()
     if (!buyer) throw new Error('User not found')
@@ -77,7 +77,7 @@ const createOrder = async (
           clientIP: client_ip,
         },
       ],
-      { session }
+      { session },
     )
 
     // ShurjoPay Payment Integration
@@ -105,7 +105,7 @@ const createOrder = async (
             transactionStatus: payment.transactionStatus,
           },
         },
-        { session }
+        { session },
       )
     }
 
@@ -137,11 +137,11 @@ const verifyPayment = async (order_id: string) => {
           verifiedPayment[0].bank_status == 'Success'
             ? 'Paid'
             : verifiedPayment[0].bank_status == 'Failed'
-            ? 'Pending'
-            : verifiedPayment[0].bank_status == 'Cancel'
-            ? 'Cancelled'
-            : '',
-      }
+              ? 'Pending'
+              : verifiedPayment[0].bank_status == 'Cancel'
+                ? 'Cancelled'
+                : '',
+      },
     )
   }
   return verifiedPayment

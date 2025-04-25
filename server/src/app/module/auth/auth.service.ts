@@ -1,5 +1,4 @@
 import config from '../../config'
-import sendMail from '../../utils/sendMail'
 import { IUser } from '../user/user.interface'
 import { ILoginUser } from './auth.interface'
 import bcrypt from 'bcrypt'
@@ -44,7 +43,7 @@ const login = async (payload: ILoginUser) => {
     config.access_secret as string,
     {
       expiresIn: '1d',
-    }
+    },
   )
 
   const authenticUser = {
@@ -57,7 +56,7 @@ const login = async (payload: ILoginUser) => {
 }
 const changePassword = async (
   user: JwtPayload,
-  payload: { oldPassword: string; newPassword: string }
+  payload: { oldPassword: string; newPassword: string },
 ) => {
   const isUserExist = await User.findOne({
     email: user?.email,
@@ -69,7 +68,7 @@ const changePassword = async (
   }
   const isPasswordMatched = await bcrypt.compare(
     payload.oldPassword,
-    isUserExist.password
+    isUserExist.password,
   )
   if (!isPasswordMatched) {
     throw new Error('Old password is incorrect')
@@ -81,7 +80,7 @@ const changePassword = async (
       role: user?.role,
     },
     { password: hashedNewPassword },
-    { new: true }
+    { new: true },
   )
   if (!updatedUser) {
     throw new Error('Failed to update password')

@@ -28,7 +28,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
 const changePassword = catchAsync(async (req, res) => {
   const result = await AuthService.changePassword(
     req.user as JwtPayload,
-    req.body
+    req.body,
   )
   sendResponse(res, {
     success: true,

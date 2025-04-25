@@ -8,7 +8,7 @@ const userRouter = Router()
 userRouter.post(
   '/create-user',
   validateRequest(userValidation.userValidationSchema),
-  userController.createUser
+  userController.createUser,
 )
 
 userRouter.get('/', userController.getUser)

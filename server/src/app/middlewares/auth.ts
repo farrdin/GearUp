@@ -16,7 +16,7 @@ const auth = (...requiredRoles: string[]) => {
     //? verify token
     const decoded = jwt.verify(
       token,
-      config.access_secret as string
+      config.access_secret as string,
     ) as JwtPayload
 
     if (!decoded || typeof decoded !== 'object' || !('email' in decoded)) {

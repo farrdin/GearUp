@@ -28,8 +28,8 @@ const userSchema = new Schema<IUser>(
       required: [true, 'Please provide your password'],
       select: false,
     },
-    photoURL:{
-      type: String
+    photoURL: {
+      type: String,
     },
     role: {
       type: String,
@@ -47,21 +47,16 @@ const userSchema = new Schema<IUser>(
   },
   {
     timestamps: true,
-  }
+  },
 )
-
 
 //* hashing password
 userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt)
-  )
+  user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt))
   next()
 })
-
 
 userSchema.post('save', function (doc, next) {
   doc.password = ''

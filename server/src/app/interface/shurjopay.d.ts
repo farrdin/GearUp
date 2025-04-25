@@ -114,7 +114,7 @@ declare module 'shurjopay' {
       merchant_username: string,
       merchant_password: string,
       merchant_key_prefix: string,
-      return_url: string
+      return_url: string,
     ): void
 
     randomString(length: number): string
@@ -126,19 +126,19 @@ declare module 'shurjopay' {
     makePayment(
       checkout_params: PaymentRequest,
       checkout_callback?: Callback<PaymentResponse>,
-      error_handler?: ErrorHandler
+      error_handler?: ErrorHandler,
     ): void
 
     verifyPayment(
       order_id: string,
       callback: Callback<VerificationResponse[]>,
-      error_handler: ErrorHandler
+      error_handler: ErrorHandler,
     ): void
 
     paymentStatus(
       order_id: string,
       callback: Callback<VerificationResponse>,
-      error_handler: ErrorHandler
+      error_handler: ErrorHandler,
     ): void
 
     token_valid(): boolean

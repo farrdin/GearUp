@@ -7,7 +7,7 @@ const createBicycle = async (payload: IBicycle): Promise<IBicycle> => {
   return result
 }
 const getBicycles = async (
-  query: Record<string, unknown>
+  query: Record<string, unknown>,
 ): Promise<IBicycle[]> => {
   const queryBuilder = new QueryBuilder(Bicycle.find(), query)
     .search(['name', 'brand', 'type'])

@@ -4,10 +4,6 @@ import auth from '../../middlewares/auth'
 
 const orderRouter = Router()
 
-orderRouter.use((req, res, next) => {
-  console.log('Incoming request:', req.method, req.url)
-  next()
-})
 orderRouter.get('/', orderController.getAllOrders)
 orderRouter.get('/:email', orderController.myOrder)
 orderRouter.get('/revenue', orderController.orderRevenue)
