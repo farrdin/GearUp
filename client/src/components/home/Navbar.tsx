@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, LogOut, LayoutDashboard } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,6 +10,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useAppSelector } from "@/redux/hooks";
+import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -20,7 +22,10 @@ const navLinks = [
 
 const Navbar = () => {
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Replace with real auth state
+  const dispatch = useDispatch();
+  const user = useAppSelector(selectCurrentUser);
+
+  console.log(user);
 
   return (
     <header className="w-full sticky top-0 z-50 border-b bg-[#f9f9f9] shadow-md backdrop-blur-md">
@@ -50,7 +55,7 @@ const Navbar = () => {
             </Link>
           ))}
 
-          {!isLoggedIn ? (
+          {!user ? (
             <Link to="/login">
               <Button variant="default">Login</Button>
             </Link>
@@ -58,8 +63,10 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-secondary">
-                  <AvatarImage src="/profile.jpg" alt="Profile" />
-                  <AvatarFallback>GU</AvatarFallback>
+                  <AvatarImage
+                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    alt="Profile"
+                  />
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-44 mt-2">
@@ -72,7 +79,7 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="flex items-center gap-2"
-                  onClick={() => setIsLoggedIn(false)}
+                  onClick={() => dispatch(logout())}
                 >
                   <LogOut className="w-4 h-4" />
                   Logout
@@ -104,7 +111,7 @@ const Navbar = () => {
                   </Link>
                 ))}
 
-                {!isLoggedIn ? (
+                {!user ? (
                   <Link to="/login">
                     <Button variant="default" className="w-full mt-4">
                       Login
@@ -120,7 +127,7 @@ const Navbar = () => {
                     <Button
                       variant="outline"
                       className="w-full"
-                      onClick={() => setIsLoggedIn(false)}
+                      onClick={() => dispatch(logout())}
                     >
                       Logout
                     </Button>

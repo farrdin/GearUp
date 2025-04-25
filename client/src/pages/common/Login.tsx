@@ -1,10 +1,18 @@
-// src/pages/Login.tsx
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { useAppDispatch } from "@/redux/hooks";
+import { verifyToken } from "@/utils/verifyToken";
+import { setUser } from "@/redux/features/auth/authSlice";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [loginUser] = useLoginMutation();
   const [form, setForm] = React.useState({
     email: "",
     password: "",
@@ -14,9 +22,39 @@ const Login = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logging in with:", form);
+    const userInfo = {
+      email: form.email,
+      password: form.password,
+    };
+    try {
+      const res = await loginUser(userInfo).unwrap();
+      if (!res.success) {
+        toast.error(res.message || "Login failed");
+        return;
+      }
+      const token = res?.token;
+      if (!token) {
+        throw new Error("Token is missing from the response.");
+      }
+      const user = verifyToken(token);
+      if (!user) {
+        throw new Error("Invalid or expired token.");
+      }
+      localStorage.setItem("token", token);
+      dispatch(setUser({ token, user }));
+      if (res?.success) {
+        toast.success("Logged in Successfully");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      } else {
+        toast.error(res.message || "Login failed");
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "An error occurred while logging in");
+    }
   };
 
   return (

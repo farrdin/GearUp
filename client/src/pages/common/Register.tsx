@@ -1,10 +1,14 @@
-// src/pages/Register.tsx
-
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRegisterMutation } from "@/redux/features/auth/authApi";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const [registerUser] = useRegisterMutation();
+  const navigate = useNavigate();
+
   const [form, setForm] = React.useState({
     name: "",
     email: "",
@@ -17,10 +21,26 @@ const Register = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registering:", form);
-    // Handle register logic here
+    const userInfo = {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    };
+    try {
+      const res = await registerUser(userInfo);
+      if (res) {
+        toast.success("User Created Successfully");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      } else {
+        toast.error("User creation failed");
+      }
+    } catch {
+      toast.error("An error occurred while signing up");
+    }
   };
 
   return (

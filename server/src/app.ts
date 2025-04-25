@@ -7,7 +7,10 @@ import notFound from './app/middlewares/notFound'
 const app: Application = Express()
 
 //? Allowed frontend URL for Cors policy
-const allowedOrigins = ['http://localhost:5173']
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://gearup-client.vercel.app',
+]
 
 //parser
 app.use(Express.json())
