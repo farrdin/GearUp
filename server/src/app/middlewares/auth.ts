@@ -19,6 +19,9 @@ const auth = (...requiredRoles: string[]) => {
       config.access_secret as string
     ) as JwtPayload
 
+    if (!decoded || typeof decoded !== 'object' || !('email' in decoded)) {
+      throw new Error('Invalid token payload')
+    }
     const { email, role } = decoded
 
     const user = await User.findOne({ email })

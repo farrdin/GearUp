@@ -2,7 +2,7 @@ export interface IUser {
   name: string
   email: string
   password: string
-  photoURL?: string | null
+  photoURL: string | null
   role: 'customer' | 'admin'
   isBlocked: boolean
 }

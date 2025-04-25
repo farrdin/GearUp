@@ -4,11 +4,11 @@ import auth from '../../middlewares/auth'
 
 const orderRouter = Router()
 
+orderRouter.get('/', orderController.getAllOrders)
+orderRouter.get('/:email', orderController.myOrder)
 orderRouter.post('/create-order', auth('customer'), orderController.createOrder)
-orderRouter.post('/verify-order', orderController.verifyPayment)
-orderRouter.get('/all-orders', orderController.getAllOrders)
+orderRouter.post('/verify', orderController.verifyPayment)
 orderRouter.delete('/delete-order/:orderId', orderController.deleteOrder)
-orderRouter.get('/my-order/:email', orderController.myOrder)
 orderRouter.get('/revenue', orderController.orderRevenue)
 
 export default orderRouter

@@ -20,7 +20,7 @@ const orderSchema = new Schema<TOrder>(
     },
     bicycles: [
       {
-        bicycleiD: {
+        bicycle: {
           type: Schema.Types.ObjectId,
           ref: 'Product',
           required: true,

@@ -63,6 +63,7 @@ const changePassword = async (
     email: user?.email,
     role: user?.role,
   }).select('+password')
+
   if (!isUserExist) {
     throw new Error('User not found')
   }

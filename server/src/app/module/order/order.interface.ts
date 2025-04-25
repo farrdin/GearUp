@@ -7,9 +7,9 @@ export interface TUser {
 }
 
 export interface TOrder extends Document {
-  user: TUser
+  user: { _id: Types.ObjectId; name: string; email: string }
   bicycles: {
-    bicycleiD: Types.ObjectId
+    bicycle: Types.ObjectId
     name: string
     quantity: number
     brand: string

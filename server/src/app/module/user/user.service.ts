@@ -14,8 +14,8 @@ const getSingleUser = async (id: string) => {
   return result
 }
 const getMyProfile = async (email: string) => {
-  const result = await User.findOne({email})
-  return result;
+  const result = await User.findOne({ email })
+  return result
 }
 const updateUser = async (id: string, data: IUser) => {
   const result = await User.findByIdAndUpdate(id, data, {
@@ -29,16 +29,15 @@ const deleteUser = async (id: string) => {
 }
 
 const blockUser = async (userId: string) => {
-  const user = await User.findById(userId);
-  if(!user) {
-    throw new Error('User not found');
+  const user = await User.findById(userId)
+  if (!user) {
+    throw new Error('User not found')
   }
-  if(user.isBlocked){
-    throw new Error('User is already blocked');
+  if (user.isBlocked) {
+    throw new Error('User is already blocked')
   }
-  user.isBlocked = true;
-  await user.save();
-  return user
+  await User.updateOne({ _id: userId }, { isBlocked: true })
+  return { ...user.toObject(), isBlocked: true }
 }
 
 export const userService = {
@@ -48,5 +47,5 @@ export const userService = {
   getSingleUser,
   updateUser,
   deleteUser,
-  blockUser
+  blockUser,
 }

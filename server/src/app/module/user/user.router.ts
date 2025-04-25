@@ -17,7 +17,6 @@ userRouter.get('/profile/:email', userController.getMyProfile)
 userRouter.patch('/:userId', userController.updateUser)
 userRouter.delete('/:userId', userController.deleteUser)
 
-// Admin routes
 userRouter.patch('/block/:userId', userController.blockUser)
 
 export default userRouter

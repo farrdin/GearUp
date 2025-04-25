@@ -9,7 +9,7 @@ import AppError from '../../errors/appError'
 const createOrder = async (
   user: { _id: string; name: string; email: string },
   payload: {
-    bicycles: { bicycleiD: string; quantity: number }[]
+    bicycles: { bicycle: string; quantity: number }[]
     deliveryType: 'standard' | 'express'
   },
   client_ip: string
@@ -21,14 +21,14 @@ const createOrder = async (
   const orderedItems: any[] = []
 
   try {
-    for (const { bicycleiD, quantity } of payload.bicycles) {
-      const bicycleInfo = await Bicycle.findById(bicycleiD).session(session)
+    for (const { bicycle, quantity } of payload.bicycles) {
+      const bicycleInfo = await Bicycle.findById(bicycle).session(session)
       if (!bicycleInfo) throw new Error('Product not found')
       if (bicycleInfo.quantity < quantity)
         throw new Error('Not enough stock available')
 
       const updatedProduct = await Bicycle.findOneAndUpdate(
-        { _id: bicycleiD, quantity: { $gte: quantity } },
+        { _id: bicycle, quantity: { $gte: quantity } },
         { $inc: { quantity: -quantity } },
         { new: true, session }
       )
@@ -60,7 +60,11 @@ const createOrder = async (
     const [order] = await Order.create(
       [
         {
-          buyer,
+          user: {
+            _id: currentUser?._id,
+            name: currentUser?.name,
+            email: currentUser?.email,
+          },
           items: orderedItems,
           totalPrice,
           deliveryType: payload.deliveryType,
