@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { TErrorSources, TGenericErrorResponse } from './errorTypes'
+import { TErrorSources, TGenericErrorResponse } from '../global/errorTypes'
 
 const duplicateError = (err: any): TGenericErrorResponse => {
   const match = err.message.match(/"([^"]*)"/)
