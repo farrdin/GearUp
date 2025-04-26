@@ -5,14 +5,26 @@ import { useGetSingleBicycleQuery } from "@/redux/features/bicycle/bicycleApi";
 import { useCreateOrderMutation } from "@/redux/features/order/orderApi";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button"; // Make sure you have this
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { IUser } from "@/types/user.interface";
 
 const SingleBicycle = () => {
   const { id } = useParams();
+  const user = useAppSelector(selectCurrentUser) as IUser;
   const { data: bicycle, error, isLoading } = useGetSingleBicycleQuery(id);
   const [createOrder] = useCreateOrderMutation();
   const [quantity, setQuantity] = useState(1);
 
   const handleBuyNow = async () => {
+    if (!user) {
+      toast.info("Please login first!");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+      return;
+    }
+
     const product = [
       {
         bicycle: bicycle.data._id,
@@ -127,12 +139,14 @@ const SingleBicycle = () => {
           </div>
 
           <div className="mt-6">
-            <Button
-              onClick={handleBuyNow}
-              className="w-full bg-primary text-white hover:bg-opacity-80 transition"
-            >
-              Buy Now
-            </Button>
+            {user?.role !== "admin" && (
+              <Button
+                onClick={handleBuyNow}
+                className="w-full bg-primary text-white hover:bg-opacity-80 transition"
+              >
+                Buy Now
+              </Button>
+            )}
           </div>
 
           <div className="mt-4 text-center">

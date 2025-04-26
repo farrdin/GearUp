@@ -76,8 +76,10 @@ const Login = () => {
           <h1 className="text-3xl font-bold text-gray-800 text-center">
             Welcome Back
           </h1>
-          <p className="text-sm text-gray-600 text-center">
-            Login to continue to your dashboard
+          <p className="text-sm text-secondary text-center">
+            <a href="/" className="hover:underline">
+              Continue Browsing Without Logging In..
+            </a>
           </p>
 
           <Input
