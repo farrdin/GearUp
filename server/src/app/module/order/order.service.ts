@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status'
 import mongoose from 'mongoose'
 import Bicycle from '../bicycle/bicycle.model'
@@ -150,12 +151,8 @@ const getAllOrders = async () => {
   const result = await Order.find()
   return result
 }
-const deleteOrder = async (id: string) => {
-  const result = await Order.findByIdAndDelete(id)
-  return result
-}
 const myOrder = async (email: string) => {
-  const result = await Order.find({ email })
+  const result = await Order.find({ 'user.email': email })
   return result
 }
 const updateOrderStatus = async (id: string, payload: { status: string }) => {
@@ -166,6 +163,10 @@ const updateOrderStatus = async (id: string, payload: { status: string }) => {
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, 'Order not found!')
   }
+  return result
+}
+const deleteOrder = async (id: string) => {
+  const result = await Order.findByIdAndDelete(id)
   return result
 }
 const orderRevenue = async () => {

@@ -87,15 +87,6 @@ const Register = () => {
             value={form.password}
             onChange={handleChange}
           />
-          <Input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            required
-            value={form.confirmPassword}
-            onChange={handleChange}
-          />
-
           <Button type="submit" className="w-full text-lg">
             Register
           </Button>
@@ -111,7 +102,7 @@ const Register = () => {
 
       {/* Right: Branding/visual */}
       <div className="hidden md:flex flex-col items-center justify-center bg-gradient-to-tr from-indigo-500 to-purple-600 text-white p-10">
-        <h2 className="text-5xl font-bold">YourBrand</h2>
+        <h2 className="text-5xl font-bold">Join Us</h2>
         <p className="mt-4 text-lg opacity-80 text-center">
           Join our community and enjoy exclusive services tailored for you.
         </p>

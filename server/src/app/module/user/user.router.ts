@@ -16,7 +16,6 @@ userRouter.get('/:userId', userController.getSingleUser)
 userRouter.get('/profile/:email', userController.getMyProfile)
 userRouter.patch('/:userId', userController.updateUser)
 userRouter.delete('/:userId', userController.deleteUser)
-
 userRouter.patch('/block/:userId', userController.blockUser)
 
 export default userRouter

@@ -47,7 +47,7 @@ const Login = () => {
       if (res?.success) {
         toast.success("Logged in Successfully");
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/");
         }, 1000);
       } else {
         toast.error(res.message || "Login failed");
@@ -61,7 +61,7 @@ const Login = () => {
     <div className="min-h-screen grid md:grid-cols-2 bg-gradient-to-br from-blue-100 to-purple-100">
       {/* Left: Branding section */}
       <div className="hidden md:flex flex-col items-center justify-center bg-gradient-to-tr from-indigo-500 to-purple-600 text-white p-10">
-        <h2 className="text-5xl font-bold">YourBrand</h2>
+        <h2 className="text-5xl font-bold">Thanks For Joining Us</h2>
         <p className="mt-4 text-lg opacity-80 text-center">
           Unlock your personalized experience with just one login.
         </p>

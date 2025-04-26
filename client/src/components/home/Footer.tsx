@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="flex flex-col gap-3">
           <Link to="/" className="flex items-center gap-2">
             <img src="/logo.png" alt="GearUp Logo" className="h-10" />
-            <span className="text-2xl font-bold tracking-tight">
+            <span className="text-2xl text-[#525252] font-bold tracking-tight">
               <span className="text-secondary">G</span>ear
               <span className="text-secondary">U</span>p
             </span>

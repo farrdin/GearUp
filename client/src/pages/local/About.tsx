@@ -4,7 +4,7 @@ const About = () => {
       <div className="container mx-auto px-4">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-primary mb-4">
+          <h1 className="text-4xl font-extrabold text-secondary mb-4">
             About GearUp
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -18,7 +18,7 @@ const About = () => {
         {/* Our Story Section */}
         <div className="flex flex-col md:flex-row gap-12 mb-16">
           <div className="md:w-1/2">
-            <h2 className="text-3xl font-semibold text-primary mb-4">
+            <h2 className="text-3xl font-semibold text-secondary mb-4">
               Our Story
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed">
@@ -33,7 +33,7 @@ const About = () => {
           </div>
           <div className="md:w-1/2">
             <img
-              src="/about-image.jpg" // Replace with actual image of the company or team
+              src="https://i.ibb.co.com/xtHqX7qN/colleagues-working-project-discussing-details.jpg" // Replace with actual image of the company or team
               alt="GearUp Team"
               className="w-full h-96 object-cover rounded-xl shadow-lg"
             />
@@ -42,7 +42,7 @@ const About = () => {
 
         {/* Our Mission Section */}
         <div className="mb-16">
-          <h2 className="text-3xl font-semibold text-primary mb-4">
+          <h2 className="text-3xl font-semibold text-secondary mb-4">
             Our Mission
           </h2>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
@@ -56,8 +56,8 @@ const About = () => {
         {/* Our Values Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           <div className="text-center">
-            <div className="text-primary text-4xl mb-4">🚴‍♂️</div>
-            <h3 className="text-xl font-semibold text-primary mb-2">
+            <div className="text-black text-4xl mb-4">🚴‍♂️</div>
+            <h3 className="text-xl font-semibold text-black mb-2">
               Performance
             </h3>
             <p className="text-muted-foreground text-sm">
@@ -66,8 +66,8 @@ const About = () => {
             </p>
           </div>
           <div className="text-center">
-            <div className="text-primary text-4xl mb-4">🌱</div>
-            <h3 className="text-xl font-semibold text-primary mb-2">
+            <div className="text-black text-4xl mb-4">🌱</div>
+            <h3 className="text-xl font-semibold text-black mb-2">
               Sustainability
             </h3>
             <p className="text-muted-foreground text-sm">
@@ -76,8 +76,8 @@ const About = () => {
             </p>
           </div>
           <div className="text-center">
-            <div className="text-primary text-4xl mb-4">🔧</div>
-            <h3 className="text-xl font-semibold text-primary mb-2">
+            <div className="text-black text-4xl mb-4">🔧</div>
+            <h3 className="text-xl font-semibold text-black mb-2">
               Innovation
             </h3>
             <p className="text-muted-foreground text-sm">
@@ -89,7 +89,7 @@ const About = () => {
 
         {/* Team Section */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-semibold text-primary mb-4">
+          <h2 className="text-3xl font-semibold text-secondary mb-4">
             Meet the Team
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
@@ -100,7 +100,7 @@ const About = () => {
           <div className="flex flex-wrap justify-center gap-8">
             <div className="bg-white p-6 rounded-xl shadow-md max-w-xs text-center">
               <img
-                src="/team-member1.jpg" // Replace with actual team member image
+                src="https://i.ibb.co.com/7yQDyFp/Authors-6.jpg" // Replace with actual team member image
                 alt="Team Member"
                 className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
               />
@@ -109,7 +109,7 @@ const About = () => {
             </div>
             <div className="bg-white p-6 rounded-xl shadow-md max-w-xs text-center">
               <img
-                src="/team-member2.jpg" // Replace with actual team member image
+                src="https://i.ibb.co.com/LJBDjXR/Authors-5.jpg" // Replace with actual team member image
                 alt="Team Member"
                 className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
               />
@@ -118,7 +118,7 @@ const About = () => {
             </div>
             <div className="bg-white p-6 rounded-xl shadow-md max-w-xs text-center">
               <img
-                src="/team-member3.jpg" // Replace with actual team member image
+                src="https://i.ibb.co.com/fQWB8Fg/Authors-7.jpg" // Replace with actual team member image
                 alt="Team Member"
                 className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
               />

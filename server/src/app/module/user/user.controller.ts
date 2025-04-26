@@ -15,7 +15,6 @@ const createUser = catchAsync(async (req, res) => {
 })
 const getMyProfile = catchAsync(async (req, res) => {
   const { email } = req.params
-  // console.log(email)
   const result = await userService.getMyProfile(email)
   sendResponse(res, {
     success: true,

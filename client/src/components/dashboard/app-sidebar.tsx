@@ -9,40 +9,54 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink } from "react-router-dom";
 import { Home, PackageSearch, Users, ClipboardList } from "lucide-react";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 
 export function AppSidebar() {
-  const sidebarItems = [
-    {
-      title: "Home",
-      url: "/dashboard",
-      icon: <Home className="w-5 h-5" />,
-    },
-    {
-      title: "Manage Product",
-      url: "/dashboard/manage-product",
-      icon: <PackageSearch className="w-5 h-5" />,
-    },
-    {
-      title: "Manage User",
-      url: "/dashboard/manage-user",
-      icon: <Users className="w-5 h-5" />,
-    },
-    {
-      title: "Manage Order",
-      url: "/dashboard/manage-order",
-      icon: <ClipboardList className="w-5 h-5" />,
-    },
-    {
-      title: "Profile",
-      url: "/dashboard/profile",
-      icon: <ClipboardList className="w-5 h-5" />,
-    },
-    {
-      title: "My Orders",
-      url: "/dashboard/orders",
-      icon: <ClipboardList className="w-5 h-5" />,
-    },
-  ];
+  interface User {
+    role: "admin" | "customer";
+  }
+
+  const user = useAppSelector(selectCurrentUser) as User | null;
+  const userRole: "admin" | "customer" = user?.role || "customer";
+  const allSidebarItems = {
+    admin: [
+      {
+        title: "Home",
+        url: "home",
+        icon: <Home className="w-5 h-5" />,
+      },
+      {
+        title: "Manage Bicycles",
+        url: "bicycles",
+        icon: <PackageSearch className="w-5 h-5" />,
+      },
+      {
+        title: "Manage User",
+        url: "users",
+        icon: <Users className="w-5 h-5" />,
+      },
+      {
+        title: "Manage Order",
+        url: "orders",
+        icon: <ClipboardList className="w-5 h-5" />,
+      },
+    ],
+    customer: [
+      {
+        title: "Profile",
+        url: "/dashboard/profile",
+        icon: <ClipboardList className="w-5 h-5" />,
+      },
+      {
+        title: "My Orders",
+        url: "/dashboard/my-orders",
+        icon: <ClipboardList className="w-5 h-5" />,
+      },
+    ],
+  };
+
+  const sidebarItems = allSidebarItems[userRole];
 
   return (
     <Sidebar className="bg-white text-black shadow-lg border-r w-64">
@@ -67,7 +81,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <NavLink
                     to={item.url}
-                    end={item.url === "/dashboard"} // Make Home match only exact
+                    end={item.url === "/dashboard"}
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                         isActive

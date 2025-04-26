@@ -37,7 +37,7 @@ const bicycleSchema = new Schema<IBicycle>(
     inStock: {
       type: Boolean,
       required: [true, 'Please specify if the bicycle is in stock'],
-      default: false,
+      default: true,
     },
   },
   {

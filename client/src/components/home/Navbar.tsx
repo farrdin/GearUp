@@ -25,15 +25,13 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const user = useAppSelector(selectCurrentUser);
 
-  console.log(user);
-
   return (
     <header className="w-full sticky top-0 z-50 border-b bg-[#f9f9f9] shadow-md backdrop-blur-md">
       <div className="w-[80%] mx-auto flex items-center justify-between px-4 py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <img src="/logo.png" alt="GearUp Logo" className="h-9" />
-          <span className="text-2xl font-bold tracking-tight">
+          <span className="text-2xl text-[#525252] font-bold tracking-tight">
             <span className="text-secondary">G</span>ear
             <span className="text-secondary">U</span>p
           </span>

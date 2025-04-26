@@ -1,34 +1,67 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useParams, Link } from "react-router-dom";
+import { FadeLoader } from "react-spinners";
+import { useGetSingleBicycleQuery } from "@/redux/features/bicycle/bicycleApi";
+import { useCreateOrderMutation } from "@/redux/features/order/orderApi";
+import { toast } from "react-toastify";
+import { Button } from "@/components/ui/button"; // Make sure you have this
 
 const SingleBicycle = () => {
-  const bicycle = {
-    _id: "6758b89855a50df1624ab025",
-    name: "Roadster 5000",
-    brand: "SpeedX",
-    price: 300,
-    type: "Road",
-    description: "A premium road bike designed for speed and performance.",
-    quantity: 8,
-    inStock: true,
-  };
-
+  const { id } = useParams();
+  const { data: bicycle, error, isLoading } = useGetSingleBicycleQuery(id);
+  const [createOrder] = useCreateOrderMutation();
   const [quantity, setQuantity] = useState(1);
 
-  const handleAddToCart = () => {
-    // Implement add to cart functionality
-    console.log("Added to cart", bicycle.name, quantity);
+  const handleBuyNow = async () => {
+    const product = [
+      {
+        bicycle: bicycle.data._id,
+        name: bicycle.data.name,
+        brand: bicycle.data.brand,
+        quantity,
+      },
+    ];
+    try {
+      const res = await createOrder({
+        bicycles: product,
+        deliveryType: "standard",
+      });
+      if ("data" in res && res?.data?.data) {
+        toast.success(res?.data?.message);
+        setTimeout(() => {
+          window.location.href = res?.data?.data?.payment?.checkout_url;
+        }, 1000);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to process the order!");
+    }
   };
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <FadeLoader color="#FFB800" />
+      </div>
+    );
+  }
 
+  if (error || !bicycle?.data) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-xl text-red-500">
+          There was an error loading the bicycle. Please try again later.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Image & Description Section */}
         <div className="flex flex-col items-center">
           <img
-            src="/roadster5000.jpg" // Replace with actual image URL
-            alt={bicycle.name}
+            src={bicycle.data.image}
+            alt={bicycle.data.name}
             className="w-full h-[400px] object-cover rounded-lg shadow-lg"
           />
           <div className="mt-6">
@@ -36,7 +69,6 @@ const SingleBicycle = () => {
               Customer Reviews
             </h3>
             <div className="flex items-center justify-center gap-2 mt-4">
-              {/* Add customer ratings here */}
               <span className="text-yellow-400">⭐⭐⭐⭐☆</span>
             </div>
           </div>
@@ -44,30 +76,34 @@ const SingleBicycle = () => {
 
         {/* Bike Details Section */}
         <div className="flex flex-col justify-between">
-          <h2 className="text-4xl font-bold text-primary">{bicycle.name}</h2>
+          <h2 className="text-4xl font-bold text-secondary">
+            {bicycle.data.name}
+          </h2>
           <p className="text-lg text-muted-foreground mb-4">
-            By {bicycle.brand}
+            By {bicycle.data.brand}
           </p>
-          <p className="text-xl font-semibold text-primary">${bicycle.price}</p>
+          <p className="text-xl font-semibold text-primary">
+            ${bicycle.data.price}
+          </p>
 
           <div className="mt-4">
             <h4 className="text-xl font-semibold">Bike Type</h4>
-            <p className="text-muted-foreground">{bicycle.type}</p>
+            <p className="text-muted-foreground">{bicycle.data.type}</p>
           </div>
 
           <div className="mt-4">
             <h4 className="text-xl font-semibold">Description</h4>
-            <p className="text-muted-foreground">{bicycle.description}</p>
+            <p className="text-muted-foreground">{bicycle.data.description}</p>
           </div>
 
           <div className="mt-4">
             <h4 className="text-xl font-semibold">Stock Availability</h4>
             <p
               className={`${
-                bicycle.inStock ? "text-green-500" : "text-red-500"
+                bicycle.data.inStock ? "text-green-500" : "text-red-500"
               }`}
             >
-              {bicycle.inStock ? "In Stock" : "Out of Stock"}
+              {bicycle.data.inStock ? "In Stock" : "Out of Stock"}
             </p>
           </div>
 
@@ -83,7 +119,7 @@ const SingleBicycle = () => {
             <button
               className="bg-gray-300 px-4 py-2 rounded-full"
               onClick={() =>
-                setQuantity((prev) => Math.min(bicycle.quantity, prev + 1))
+                setQuantity((prev) => Math.min(bicycle.data.quantity, prev + 1))
               }
             >
               +
@@ -92,10 +128,10 @@ const SingleBicycle = () => {
 
           <div className="mt-6">
             <Button
-              onClick={handleAddToCart}
+              onClick={handleBuyNow}
               className="w-full bg-primary text-white hover:bg-opacity-80 transition"
             >
-              Add to Cart
+              Buy Now
             </Button>
           </div>
 

@@ -1,6 +1,15 @@
-import { Trash2, Edit } from "lucide-react";
+import { useGetUserQuery } from "@/redux/features/user/userApi";
+import { Edit } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "@radix-ui/react-dropdown-menu";
+import { useUpdateUserMutation } from "@/redux/features/user/userApi";
+import { toast } from "react-toastify";
 
-type User = {
+type TUser = {
   _id: string;
   name: string;
   email: string;
@@ -11,36 +20,41 @@ type User = {
 };
 
 const ManageUser = () => {
-  // Dummy user data for table
-  const users: User[] = [
-    {
-      _id: "67f58b9ffc71552de2230efe",
-      name: "WEB ADMIN",
-      email: "admin@blog.com",
-      role: "admin",
-      isBlocked: false,
-      createdAt: "2025-04-08T20:48:31.536+00:00",
-      updatedAt: "2025-04-08T20:48:31.536+00:00",
-    },
-    {
-      _id: "67f58b9ffc71552de2230efg",
-      name: "USER ONE",
-      email: "user1@blog.com",
-      role: "user",
-      isBlocked: true,
-      createdAt: "2025-03-10T14:12:12.345+00:00",
-      updatedAt: "2025-03-10T14:12:12.345+00:00",
-    },
-  ];
+  const { data: users } = useGetUserQuery({});
+  const [updateUser] = useUpdateUserMutation();
 
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    try {
+      const result = await updateUser({
+        userId,
+        updatedData: { role: newRole },
+      }).unwrap();
+      if (result?.data) {
+        toast.success("User role updated successfully!");
+      }
+    } catch (error) {
+      console.error("Error updating role", error);
+    }
+  };
+  const handleStatusChange = async (userId: string, newStatus: boolean) => {
+    try {
+      const result = await updateUser({
+        userId,
+        updatedData: { isBlocked: newStatus },
+      }).unwrap();
+      if (result?.data) {
+        toast.success("User status updated successfully!");
+      }
+    } catch (error) {
+      console.error("Error updating status", error);
+    }
+  };
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
           Manage Users
         </h1>
-
-        {/* Users Table */}
         <div className="bg-white shadow-lg rounded-lg p-6">
           <table className="w-full table-auto">
             <thead>
@@ -51,11 +65,10 @@ const ManageUser = () => {
                 <th className="py-3 px-4 text-sm text-gray-600">Role</th>
                 <th className="py-3 px-4 text-sm text-gray-600">Status</th>
                 <th className="py-3 px-4 text-sm text-gray-600">Created At</th>
-                <th className="py-3 px-4 text-sm text-gray-600">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {users?.data?.map((user: TUser) => (
                 <tr key={user._id} className="border-b">
                   <td className="py-3 px-4 text-sm font-semibold text-gray-700">
                     {user._id}
@@ -66,10 +79,32 @@ const ManageUser = () => {
                   <td className="py-3 px-4 text-sm text-gray-600">
                     {user.email}
                   </td>
-                  <td className="py-3 px-4 text-sm text-gray-600">
+
+                  <td className="py-3 px-4 text-sm text-gray-600 flex gap-2">
                     {user.role}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="text-blue-600 hover:text-blue-800">
+                          <Edit className="w-5 h-5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-white border rounded-md shadow-lg">
+                        <DropdownMenuItem
+                          onClick={() => handleRoleChange(user._id, "customer")}
+                          className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                        >
+                          Customer
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleRoleChange(user._id, "admin")}
+                          className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                        >
+                          Admin
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
-                  <td className="py-3 px-4 text-sm text-gray-600">
+                  <td className="py-3 px-4 text-sm text-gray-600 ">
                     <span
                       className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${
                         user.isBlocked
@@ -79,17 +114,30 @@ const ManageUser = () => {
                     >
                       {user.isBlocked ? "Blocked" : "Active"}
                     </span>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button className="text-blue-600 hover:text-blue-800 ml-2">
+                          <Edit className="w-5 h-5" />
+                        </button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-white border rounded-md shadow-lg">
+                        <DropdownMenuItem
+                          onClick={() => handleStatusChange(user._id, true)}
+                          className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                        >
+                          Block User
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleStatusChange(user._id, false)}
+                          className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                        >
+                          Unblock User
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </td>
                   <td className="py-3 px-4 text-sm text-gray-600">
                     {new Date(user.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="py-3 px-4 text-sm">
-                    <button className="text-blue-600 hover:text-blue-800">
-                      <Edit className="w-5 h-5" />
-                    </button>
-                    <button className="text-red-600 hover:text-red-800 ml-2">
-                      <Trash2 className="w-5 h-5" />
-                    </button>
                   </td>
                 </tr>
               ))}

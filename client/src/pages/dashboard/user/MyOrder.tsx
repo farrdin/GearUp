@@ -1,48 +1,31 @@
-// Dummy order data (replace with actual data fetching)
-const orders = [
-  {
-    orderId: "12345",
-    products: [
-      {
-        name: "Roadster 5000",
-        quantity: 2,
-        price: 300,
-      },
-    ],
-    totalPrice: 600,
-    status: "Shipped",
-    createdAt: "2024-12-10T22:00:09.508+00:00",
-  },
-  {
-    orderId: "12346",
-    products: [
-      {
-        name: "Mountain Beast 2000",
-        quantity: 1,
-        price: 500,
-      },
-    ],
-    totalPrice: 500,
-    status: "Delivered",
-    createdAt: "2024-12-05T16:00:00.000+00:00",
-  },
-];
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useMyOrderQuery } from "@/redux/features/order/orderApi";
+import { useAppSelector } from "@/redux/hooks";
+import { IOrder } from "@/types/orders.type";
+import { IUser } from "@/types/user.interface";
+import { FadeLoader } from "react-spinners";
 
 const MyOrder = () => {
+  const user = useAppSelector(selectCurrentUser) as IUser;
+  const email = user?.email;
+  const { data: orders, isLoading } = useMyOrderQuery(email);
+  if (isLoading)
+    return <FadeLoader className="flex w-full justify-center items-center" />;
+  if (!orders?.data?.length) {
+    return <p className="text-gray-500">No orders found.</p>;
+  }
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-3xl font-semibold text-gray-800 mb-6">My Orders</h1>
-
-        {/* Order List */}
-        {orders.map((order) => (
+        {orders?.data?.map((order: IOrder) => (
           <div
-            key={order.orderId}
+            key={order?._id}
             className="mb-6 p-4 border rounded-lg shadow-md bg-white"
           >
             <div className="flex justify-between items-center">
               <div className="text-lg font-semibold text-gray-800">
-                Order #{order.orderId}
+                Order #{order?._id}
               </div>
               <div
                 className={`px-4 py-2 rounded-lg ${
@@ -60,15 +43,15 @@ const MyOrder = () => {
             <div className="mt-4">
               <h2 className="text-lg font-medium text-gray-700">Products</h2>
               <ul className="list-disc ml-6 mt-2 text-gray-600">
-                {order.products.map((product, index) => (
+                {order?.bicycles?.map((bicycle) => (
                   <li
-                    key={index}
+                    key={bicycle?._id}
                     className="flex justify-between items-center py-1"
                   >
                     <span>
-                      {product.name} (x{product.quantity})
+                      {bicycle?.name} (x{bicycle?.quantity})
                     </span>
-                    <span className="text-gray-500">${product.price}</span>
+                    <span className="text-gray-500">{bicycle?.quantity}pc</span>
                   </li>
                 ))}
               </ul>

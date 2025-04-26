@@ -1,180 +1,174 @@
-// Dummy cart data (replace with real data from Redux or backend)
-const cartItems = [
-  {
-    name: "Roadster 5000",
-    quantity: 2,
-    price: 300,
-  },
-  {
-    name: "Mountain Beast 2000",
-    quantity: 1,
-    price: 500,
-  },
-];
+import { CheckCircle, XCircle, RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
+import { useVerifyPaymentQuery } from "@/redux/features/order/orderApi";
 
 const CheckoutPage = () => {
-  const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  const [searchParams] = useSearchParams();
+  const orderId = searchParams.get("order_id")!;
+
+  const {
+    data: verifyData,
+    isSuccess: isVerifySuccess,
+    isError: isVerifyError,
+    error: verifyError,
+  } = useVerifyPaymentQuery(orderId!, {
+    skip: !orderId,
+  });
+  useEffect(() => {
+    if (isVerifyError) {
+      toast.error("Payment verification failed");
+      console.error(verifyError);
+    }
+  }, [isVerifySuccess, isVerifyError, verifyData, verifyError]);
+  const paymentStatus = verifyData?.data[0]?.bank_status;
+
+  if (!isVerifySuccess) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-center text-gray-600">
+        <p>Verifying payment...</p>
+      </div>
+    );
+  }
+
+  const {
+    order_id,
+    name,
+    amount,
+    currency,
+    method,
+    date_time,
+    card_holder_name,
+    card_number,
+    phone_no,
+    bank_trx_id,
+    sp_message,
+  } = verifyData?.data[0] || {};
+
+  const renderStatusContent = () => {
+    switch (paymentStatus) {
+      case "Success":
+        return (
+          <>
+            <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
+            <h1 className="mb-2 text-3xl font-semibold text-gray-800">
+              Payment Successful!
+            </h1>
+            <p className="mb-6 text-gray-600">
+              Thank you, {name}. Your payment has been confirmed.
+            </p>
+          </>
+        );
+      case "Failed":
+        return (
+          <>
+            <XCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
+            <h1 className="mb-2 text-3xl font-semibold text-gray-800">
+              Payment Failed
+            </h1>
+            <p className="mb-6 text-gray-600">
+              Unfortunately, your payment could not be processed. Please try
+              again.
+            </p>
+          </>
+        );
+      case "Cancel":
+        return (
+          <>
+            <RefreshCcw className="mx-auto mb-4 h-16 w-16 text-yellow-500" />
+            <h1 className="mb-2 text-3xl font-semibold text-gray-800">
+              Payment Cancelled
+            </h1>
+            <p className="mb-6 text-gray-600">
+              Your payment has been cancelled. If this was a mistake, please try
+              again.
+            </p>
+          </>
+        );
+      default:
+        return (
+          <>
+            <p className="mb-6 text-gray-600">
+              We are unable to verify your payment status at the moment.
+            </p>
+          </>
+        );
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-50 to-pink-50 flex flex-col text-gray-800">
-      {/* Sticky Header */}
-      <header className="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-10">
-        <h1 className="text-2xl font-semibold text-gray-800">Checkout</h1>
-        <span className="text-sm text-gray-600">Your Cart</span>
-      </header>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-tr from-green-50 to-white px-4">
+      <div className="w-full max-w-xl text-center">
+        {renderStatusContent()}
 
-      {/* Checkout Form Section */}
-      <main className="flex-1 overflow-hidden px-4 sm:px-6 lg:px-8 py-6 flex flex-col justify-between">
-        <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-xl p-6 space-y-6 flex-1 overflow-auto">
-          {/* Order Summary */}
-          <section>
-            <h2 className="text-xl font-medium text-gray-800 mb-4">
-              Order Summary
-            </h2>
-            <div className="space-y-4">
-              {cartItems.map((item, index) => (
-                <div key={index} className="flex justify-between text-gray-700">
-                  <span className="text-lg">
-                    {item.name} x{item.quantity}
-                  </span>
-                  <span className="text-lg font-semibold">
-                    ${item.price * item.quantity}
-                  </span>
-                </div>
-              ))}
+        <Card className="text-left shadow-md">
+          <CardContent className="space-y-3 p-6">
+            <div className="flex justify-between">
+              <span className="font-medium">Order ID:</span>
+              <span>{order_id}</span>
             </div>
-            <div className="flex justify-between text-xl font-semibold text-gray-900 mt-6 pt-4 border-t border-gray-200">
-              <span>Total</span>
-              <span>${totalPrice}</span>
+            <div className="flex justify-between">
+              <span className="font-medium">Transaction ID:</span>
+              <span>{bank_trx_id}</span>
             </div>
-          </section>
+            <div className="flex justify-between">
+              <span className="font-medium">Amount:</span>
+              <span>
+                {amount} {currency}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Payment Method:</span>
+              <span>{method}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Card Holder Name:</span>
+              <span>{card_holder_name}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Card Number:</span>
+              <span>{card_number}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Phone Number:</span>
+              <span>{phone_no}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Payment Status:</span>
+              <span className="font-semibold text-green-600">
+                {paymentStatus}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Date & Time:</span>
+              <span>{date_time}</span>
+            </div>
+            {paymentStatus === "Failed" && sp_message && (
+              <div className="flex justify-between">
+                <span className="font-medium">Failure Reason:</span>
+                <span>{sp_message}</span>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-          {/* Delivery Information */}
-          <section>
-            <h2 className="text-xl font-medium text-gray-800 mb-4">
-              Delivery Information
-            </h2>
-            <form className="space-y-4">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className="mt-2 p-3 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500"
-                  placeholder="John Doe"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="mt-2 p-3 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500"
-                  placeholder="youremail@example.com"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Delivery Address
-                </label>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  className="mt-2 p-3 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500"
-                  placeholder="1234 Main Street, City, Country"
-                />
-              </div>
-            </form>
-          </section>
-
-          {/* Payment Information */}
-          <section>
-            <h2 className="text-xl font-medium text-gray-800 mb-4">
-              Payment Information
-            </h2>
-            <form className="space-y-4">
-              <div>
-                <label
-                  htmlFor="card"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Credit Card Number
-                </label>
-                <input
-                  type="text"
-                  id="card"
-                  name="card"
-                  className="mt-2 p-3 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500"
-                  placeholder="1234 5678 9101 1121"
-                />
-              </div>
-              <div className="flex gap-4">
-                <div className="w-1/2">
-                  <label
-                    htmlFor="expiry"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Expiry Date
-                  </label>
-                  <input
-                    type="text"
-                    id="expiry"
-                    name="expiry"
-                    className="mt-2 p-3 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500"
-                    placeholder="MM/YY"
-                  />
-                </div>
-                <div className="w-1/2">
-                  <label
-                    htmlFor="cvv"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    CVV
-                  </label>
-                  <input
-                    type="text"
-                    id="cvv"
-                    name="cvv"
-                    className="mt-2 p-3 w-full rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500"
-                    placeholder="123"
-                  />
-                </div>
-              </div>
-            </form>
-          </section>
-
-          {/* Submit Button */}
-          <div className="flex justify-center mt-6">
-            <button className="px-6 py-3 bg-primary text-white rounded-lg text-lg font-semibold w-full hover:bg-primary-dark transition-all duration-200">
-              Complete Checkout
-            </button>
-          </div>
+        <div className="mt-6 flex justify-center gap-4">
+          <Button
+            onClick={() => (window.location.href = "/dashboard/my-orders")}
+          >
+            Track Orders
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = "/bicycle")}
+          >
+            Continue Shopping
+          </Button>
         </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-white shadow-md p-4 text-center text-sm text-gray-600">
-        <p>© 2025 Bicycle Store | All Rights Reserved</p>
-      </footer>
+      </div>
     </div>
   );
 };

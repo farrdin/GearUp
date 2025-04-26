@@ -31,6 +31,25 @@ const verifyPayment = catchAsync(async (req, res) => {
     data: order,
   })
 })
+const getAllOrders = catchAsync(async (req, res) => {
+  const result = await orderService.getAllOrders()
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Orders are getting succesfully',
+    data: result,
+  })
+})
+const myOrder = catchAsync(async (req, res) => {
+  const { email } = req.params
+  const result = await orderService.myOrder(email)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'My Order is getting successfully',
+    data: result,
+  })
+})
 const updateOrderStatus = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id
   const { status } = req.body
@@ -42,6 +61,16 @@ const updateOrderStatus = catchAsync(async (req: Request, res: Response) => {
     success: true,
     message: 'Order status updated successfully!',
     data: result,
+  })
+})
+const deleteOrder = catchAsync(async (req, res) => {
+  const orderId = req.params.orderId
+  await orderService.deleteOrder(orderId)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Order deleted succesfully',
+    data: {},
   })
 })
 const orderRevenue = async (req: Request, res: Response) => {
@@ -56,35 +85,6 @@ const orderRevenue = async (req: Request, res: Response) => {
     res.json(error)
   }
 }
-const getAllOrders = catchAsync(async (req, res) => {
-  const result = await orderService.getAllOrders()
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Orders are getting succesfully',
-    data: result,
-  })
-})
-const deleteOrder = catchAsync(async (req, res) => {
-  const orderId = req.params.orderId
-  await orderService.deleteOrder(orderId)
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Order deleted succesfully',
-    data: {},
-  })
-})
-const myOrder = catchAsync(async (req, res) => {
-  const { email } = req.params
-  const result = await orderService.myOrder(email)
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'My Order is getting successfully',
-    data: result,
-  })
-})
 
 export const orderController = {
   createOrder,

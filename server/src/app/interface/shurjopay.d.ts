@@ -68,6 +68,7 @@ declare module 'shurjopay' {
     transactionStatus: string // State of the payment (e.g., Pending, Completed)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface VerificationRequest {
     order_id: string // shurjoPay payment ID sent during callback (Mandatory)
   }
