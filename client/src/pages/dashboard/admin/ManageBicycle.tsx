@@ -14,7 +14,6 @@ import {
 } from "@/redux/features/bicycle/bicycleApi";
 import { toast } from "react-toastify";
 import { FadeLoader } from "react-spinners";
-import { Helmet } from "react-helmet-async";
 type BicycleFormValues = Omit<IBicycle, "inStock">;
 
 const ManageBicycle = () => {
@@ -72,9 +71,7 @@ const ManageBicycle = () => {
   };
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      <Helmet>
-        <title>GearUp | Manage Product</title>
-      </Helmet>
+
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
           Manage Bicycles
