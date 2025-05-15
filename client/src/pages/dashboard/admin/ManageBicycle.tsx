@@ -71,7 +71,6 @@ const ManageBicycle = () => {
   };
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
           Manage Bicycles
@@ -91,7 +90,7 @@ const ManageBicycle = () => {
         </div>
 
         <div className="bg-white shadow-lg rounded-lg p-6">
-          <div className="bg-white shadow-lg rounded-lg p-6 min-h-[300px] flex items-center justify-center">
+          <div className="bg-white overflow-x-auto shadow-lg rounded-lg p-6 min-h-[300px] flex items-center justify-center">
             {isLoading ? (
               <FadeLoader color="#primary" />
             ) : error ? (

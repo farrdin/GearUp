@@ -47,7 +47,7 @@ const ManageOrder = () => {
         </h1>
 
         {/* Orders Table */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="bg-white overflow-x-auto shadow-lg rounded-lg p-6">
           <table className="w-full table-auto">
             <thead>
               <tr className="border-b text-left">
